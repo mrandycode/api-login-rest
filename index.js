@@ -6,8 +6,20 @@ const { config } = require('./config/config');
 const { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } = require('./middlewares/error.handler');
 const port = config.port || 3000;
 const whitelist = [config.corsWhiteList];
-const app = express();
+const i18next = require('i18next');
+const BackendI18n = require('i18next-fs-backend');
+const middleware = require('i18next-http-middleware');
 
+i18next.use(BackendI18n).use(middleware.LanguageDetector)
+.init({
+    fallbackLng:'es',
+    backend: {
+        loadPath: '.././locales/{{lng}}/translation.json'
+    }
+})
+
+const app = express();
+app.use(middleware.handle(i18next));
 app.use(express.json());
 
 const options = {
@@ -28,11 +40,12 @@ app.get('/', (req, res) => {
     res.send('Welcome to api-login-rest-1.0');
 });
 
+
 routerApi(app);
 
+app.use(boomErrorHandler);
 app.use(logErrors);
 app.use(ormErrorHandler);
-app.use(boomErrorHandler);
 app.use(errorHandler);
 
 app.listen(port);

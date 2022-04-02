@@ -9,7 +9,7 @@ class AuthService {
 
 
     async find() {
-        const message = await this.client.Contact.findAll(); // Con Pool de conexiones sin ORM
+        const message = await this.client.Contact.findAll();
         return message;
     }
 }

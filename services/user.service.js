@@ -24,12 +24,12 @@ class UserService {
     }
 
     async findOne(id) {
-        const user = await models.User.findByPk(id);
-        if (!user) {
-            throw boom.notFound('Usuario no encontrado.');
-        }
-        delete user.dataValues.password;
-        return user;
+        return await models.User.findByPk(id).then((user) => {
+            delete user.dataValues.password;
+            return user;
+        }).catch(() => {
+            throw boom.notFound(translate('Usuario no encontrado.', 'en'));
+        });
     }
 
     async findByEmail(email) {
@@ -48,15 +48,15 @@ class UserService {
 
     async update(id, changes) {
         const user = await this.findOne(id);
-        if (user){
+        if (user) {
             changes.password = await bcrypt.hash(changes.password, 10);
             const rta = await user.update(changes);
             delete rta.dataValues.password;
             return rta;
-        }else{
+        } else {
             return false;
         }
-     
+
     }
 
     async delete(id) {

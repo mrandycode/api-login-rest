@@ -4,7 +4,7 @@ const validatorHandler = require('./../middlewares/validator.handler');
 const { createUserSchema, getUserByIdSchema, getUsersByCountrySchema, getUserByEmailSchema, updateUserSchema } = require('./../schemas/user.schema');
 const router = express.Router();
 const service = new UserService();
-const  { checkApiKey, checkRoles } = require('../middlewares/auth.handler');
+const { checkApiKey, checkRoles } = require('../middlewares/auth.handler');
 const passport = require('passport');
 
 router.get('/', async (req, res, next) => {
@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id',
     passport.authenticate('jwt', { session: false }),
     checkApiKey,
-    checkRoles('admin', 'user'),
+    checkRoles('admin', 'customer'),
     validatorHandler(getUserByIdSchema, 'params'),
     async (req, res, next) => {
         try {

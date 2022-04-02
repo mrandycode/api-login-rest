@@ -25,8 +25,8 @@ const getUsersByCountrySchema = Joi.object({
 
 const createUserSchema = Joi.object({
     country: country.required(),
-    name: name,
-    lastName: lastName,
+    name: name.required(),
+    lastName: lastName.required(),
     email: email.required(),
     password: password.required(),
     role: role.required()

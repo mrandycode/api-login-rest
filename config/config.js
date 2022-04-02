@@ -10,6 +10,7 @@ const config = {
     dbHost: process.env.DB_HOST,
     jwtSecret: process.env.JWT_SECRET,
     corsWhiteList: process.env.CORS_WHITE_LIST,
+    apiKey: process.env.API_KEY,
 };
 
 module.exports = { config };

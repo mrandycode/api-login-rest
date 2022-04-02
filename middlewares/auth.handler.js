@@ -1,9 +1,9 @@
 const boom = require('@hapi/boom');
 const { config } = require('./../config/config');
 
-function checkApiKey(req, res, next) {
+function checkApiKey(req, res, next) {  
   const apiKey = req.headers['api-key'];
-  if (apiKey  === config.apikey) {
+  if (apiKey === config.apiKey) {
     next();
   } else {
     next(boom.unauthorized());
@@ -21,4 +21,4 @@ function checkRoles(...roles) {
   }
 }
 
-module.exports = { checkApiKey , checkRoles }
+module.exports = { checkApiKey, checkRoles }
