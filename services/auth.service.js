@@ -12,4 +12,5 @@ class AuthService {
         const message = await this.client.Contact.findAll();
         return message;
     }
+
 }

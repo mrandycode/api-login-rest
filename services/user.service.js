@@ -1,6 +1,8 @@
 const boom = require('@hapi/boom');
 const bcrypt = require('bcrypt');
 const { models } = require('./../libs/sequelize');
+const jwt = require('jsonwebtoken');
+const { config } = require('../config/config');
 
 class UserService {
 
@@ -19,6 +21,7 @@ class UserService {
         });
         rta.map(r => {
             delete r.dataValues.password;
+            delete r.dataValues.recoveryToken;
         });
         return rta;
     }
@@ -26,6 +29,7 @@ class UserService {
     async findOne(id) {
         return await models.User.findByPk(id).then((user) => {
             delete user.dataValues.password;
+            delete user.dataValues.recoveryToken;
             return user;
         }).catch(() => {
             throw boom.notFound(translate('Usuario no encontrado.', 'en'));
@@ -49,7 +53,9 @@ class UserService {
     async update(id, changes) {
         const user = await this.findOne(id);
         if (user) {
-            changes.password = await bcrypt.hash(changes.password, 10);
+            if (changes.hasOwnProperty() === 'password') {
+                changes.password = await bcrypt.hash(changes.password, 10);
+            }
             const rta = await user.update(changes);
             delete rta.dataValues.password;
             return rta;
@@ -63,6 +69,21 @@ class UserService {
         const user = await this.findOne(id);
         await user.destroy();
         return { id };
+    }
+
+    async changePassword(token, newPassword) {
+        try {
+            const payload = jwt.verify(token, config.jwtSecret);
+            const user = await this.findOne(payload.sub);
+            if (user.recoveryToken !== token) {
+                throw boom.unauthorized('TOKEN_EXPIRED');
+            }
+            const hash = await bcrypt.hash(newPassword, 10);
+            await this.update(user.id, { recoveryToken: null, password: hash });
+
+        } catch (error) {
+            boom.unauthorized('UNAUTHORIZED');
+        }
     }
 
 }

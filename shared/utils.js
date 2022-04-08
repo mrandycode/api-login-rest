@@ -14,7 +14,7 @@ function getErrorByPathOrm(errors, req) {
 }
 
 function translateBoom(err, req) {
-    err.output.payload.message = req.t(err.output.payload.message);
+    err.output.payload.message = req.t(err.output.payload.message.toUpperCase());
     return err;
 }
 

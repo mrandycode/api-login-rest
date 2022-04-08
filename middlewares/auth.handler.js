@@ -6,7 +6,7 @@ function checkApiKey(req, res, next) {
   if (apiKey === config.apiKey) {
     next();
   } else {
-    next(boom.unauthorized());
+    next(boom.unauthorized('UNAUTHORIZED'));
   }
 }
 
@@ -16,7 +16,7 @@ function checkRoles(...roles) {
     if (roles.includes(user.role)) {
       next();
     } else {
-      next(boom.unauthorized());
+      next(boom.unauthorized('UNAUTHORIZED'));
     }
   }
 }

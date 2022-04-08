@@ -1,9 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const { config } = require('./../config/config');
-
+const { newPasswordSchema } = require('../schemas/auth.schema');
+const validatorHandler = require('./../middlewares/validator.handler');
+const { config } = require('../config/config');
+const UserService = require('../services/user.service');
+const { checkApiKey } = require('../middlewares/auth.handler');
 const router = express.Router();
+const service = new UserService();
 
 router.post('/login',
   passport.authenticate('local', { session: false }),
@@ -14,12 +18,26 @@ router.post('/login',
         sub: user.id,
         role: user.role
       }
-
-      const token = jwt.sign(payload, config.jwtSecret);
+      const token = jwt.sign(payload, config.jwtSecret,{expiresIn: '30min'} );
+      delete user.dataValues.recoveryToken;
       res.json({ user, token });
     } catch (error) {
       next(error);
     }
   });
 
-  module.exports = router;
+router.post('/change-password',
+  checkApiKey,
+  validatorHandler(newPasswordSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { recoveryToken, password } = req.body;
+      await service.changePassword(recoveryToken, password);
+      res.status(201).json({ message: req.t('CHANGE_PASSWORD_SUCCESS') });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+module.exports = router;

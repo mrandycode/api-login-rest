@@ -11,6 +11,8 @@ const config = {
     jwtSecret: process.env.JWT_SECRET,
     corsWhiteList: process.env.CORS_WHITE_LIST,
     apiKey: process.env.API_KEY,
+    hostEmail: process.env.HOST_EMAIL,
+    portEmail: process.env.PORT_EMAIL,
 };
 
 module.exports = { config };
