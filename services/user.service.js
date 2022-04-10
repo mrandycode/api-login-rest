@@ -39,9 +39,7 @@ class UserService {
     async findByEmail(email) {
         return await models.User.findOne({
             where: { email }
-        }).then(user => {
-            delete user.dataValues.password;
-            delete user.dataValues.recoveryToken;
+        }).then((user) => {
             return user;
         }).catch(() => {
             throw boom.unauthorized('USER_NOT_FOUND');

@@ -12,7 +12,6 @@ module.exports = Object.freeze({
             validatorKey: 'not_unique',
             translateKey: 'EMAIL_UNIQUE'
         }
-
     ],
     EMAIL_RECOVERY: {
         host: config.hostEmail,
@@ -26,8 +25,6 @@ module.exports = Object.freeze({
     },
     EMAILS: {
         RECOVERY: "recovery@salvameid.com",
-        SUPPORT: "support@salvameid.com",
+        SUPPORT: "support@salvameid.com"
     }
-
-},
-);
+});

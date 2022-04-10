@@ -42,12 +42,20 @@ router.get('/:id',
     }
 );
 
-router.get('/by-email/:email',
-    validatorHandler(getUserByEmailSchema, 'params'),
+router.post('/get/email',
+    passport.authenticate('jwt', { session: false }),
+    checkRoles('admin'),
+    validatorHandler(getUserByEmailSchema, 'body'),
+    checkApiKey,
     async (req, res, next) => {
         try {
-            const { email } = req.params;
+            const { email } = req.body;
             const user = await service.findByEmail(email);
+            delete user.dataValues.id;
+            delete user.dataValues.password;
+            delete user.dataValues.recoveryToken;
+            delete user.dataValues.role;
+            delete user.recoveryToken;
             res.json(user);
         } catch (error) {
             next(error);
