@@ -3,6 +3,7 @@ const http = require('http');
 const UserService = require('./../services/user.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const constants = require('../shared/constants');
+const utils = require('../shared/utils');
 const jwt = require('jsonwebtoken');
 const { config } = require('../config/config');
 const { createUserSchema,
@@ -15,7 +16,6 @@ const router = express.Router();
 const service = new UserService();
 const { checkApiKey, checkRoles } = require('../middlewares/auth.handler');
 const passport = require('passport');
-const { boom } = require('@hapi/boom');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -118,24 +118,15 @@ router.post('/recovery/password',
             const body = req.body;
             const email = body.email;
             const user = await service.findByEmail(email);
-            if (!user) {
-                boom.unauthorized('UNAUTHORIZED');
-            }
+
             const payload = {
                 sub: user.id
-            }
+            };
+
             // se puede crear otro secret para recuperación
             const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '15min' });
-            const link = `http://www.salvameid.com/recovery?token=${token}`;
             await service.update(user.id, { recoveryToken: token });
-
-            const bodyEmail = {
-                from: 'recovery@salvameid.com',
-                to: email,
-                subject: req.t('SUBJECT_RECOVERY_PASS'),
-                text: 'Dar Click a el siguiente link para recuperar su contraseña ' + link,
-                html: '<div style=\"display:flex; justify-content:center\"><img width=\"300px\" height=\"100px\" src=\"https://www.salvameid.com/assets/images/logo-banner.png\"></div><h1>Recuperación de contraseña</h1> <p>Hola,' + user.name + '.</p> <p>Para cambiar tu contraseña dar click al siguiente link</p> <a href=\"https://salvameid.web.app/change-password/' + token + '\" target=\"_blank\">Link</a> <p>Muchas gracias por preferirnos!</p> </body> </html>'
-            }
+            const bodyEmail = utils.getEmailRecovery(email, user, token, req);
 
             const options = constants.EMAIL_RECOVERY;
             var postReq = await http.request(options, function (response) {

@@ -22,7 +22,12 @@ module.exports = Object.freeze({
         headers: {
             'api-key': config.apiKey,
             'Content-Type': 'application/json'
-          }
+        }
+    },
+    EMAILS: {
+        RECOVERY: "recovery@salvameid.com",
+        SUPPORT: "support@salvameid.com",
     }
+
 },
 );

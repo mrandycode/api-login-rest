@@ -32,15 +32,20 @@ class UserService {
             delete user.dataValues.recoveryToken;
             return user;
         }).catch(() => {
-            throw boom.notFound(translate('Usuario no encontrado.', 'en'));
+            throw boom.unauthorized('USER_NOT_FOUND');
         });
     }
 
     async findByEmail(email) {
-        const rta = await models.User.findOne({
+        return await models.User.findOne({
             where: { email }
+        }).then(user => {
+            delete user.dataValues.password;
+            delete user.dataValues.recoveryToken;
+            return user;
+        }).catch(() => {
+            throw boom.unauthorized('USER_NOT_FOUND');
         });
-        return rta;
     }
 
     async findByCountry(email) {
