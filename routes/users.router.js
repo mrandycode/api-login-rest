@@ -56,6 +56,7 @@ router.post('/get/email',
             delete user.dataValues.recoveryToken;
             delete user.dataValues.role;
             delete user.recoveryToken;
+            
             res.json(user);
         } catch (error) {
             next(error);
