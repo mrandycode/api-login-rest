@@ -8,6 +8,9 @@ const email = Joi.string().email().max(64);
 const password = Joi.string()
     .required()
     .min(8);
+const confirmPassword = Joi.string()
+    .required()
+    .min(8);
 const role = Joi.string().min(5);
 
 const getUserByIdSchema = Joi.object({
@@ -28,6 +31,7 @@ const createUserSchema = Joi.object({
     lastName: lastName.required(),
     email: email.required(),
     password: password.required(),
+    confirmPassword: confirmPassword.required(),
     role: role.required()
 });
 

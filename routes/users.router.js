@@ -34,8 +34,8 @@ router.get('/:id',
     async (req, res, next) => {
         try {
             const { id } = req.params;
-            const category = await service.findOne(id);
-            res.json(category);
+            const user = await service.findOne(id);
+            res.json(user);
         } catch (error) {
             next(error);
         }
@@ -56,7 +56,7 @@ router.post('/get/email',
             delete user.dataValues.recoveryToken;
             delete user.dataValues.role;
             delete user.recoveryToken;
-            
+
             res.json(user);
         } catch (error) {
             next(error);
@@ -82,8 +82,15 @@ router.post('/create',
     async (req, res, next) => {
         try {
             const body = req.body;
-            const newUser = await service.create(body);
-            res.status(201).json(newUser);
+            const { email } = body;
+            const user = await service.findByEmail(email);
+            if (user) {
+                res.status(401).json(req.t('EMAIL_UNIQUE'));
+            } else {
+                const newUser = await service.create(body);
+                res.status(201).json(newUser);
+            }
+
         } catch (error) {
             next(error);
         }

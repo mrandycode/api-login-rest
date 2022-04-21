@@ -39,8 +39,7 @@ class UserService {
     async findByEmail(email) {
         return await models.User.findOne({
             where: { email }
-        }).then((user) => {
-            
+        }).then((user) => {            
             return user;
         }).catch(() => {
             throw boom.unauthorized('USER_NOT_FOUND');
