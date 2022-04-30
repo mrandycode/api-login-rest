@@ -22,7 +22,7 @@ function translateBoom(err, req) {
 
 function getEmailRecovery(email, user, token, req) {
     const host = config.corsWhiteList;
-    const link = host + `/change/password${token}`;
+    const link = host + `/change/password/${token}`;
     const body = {
         from: constants.EMAILS.RECOVERY,
         to: email,
