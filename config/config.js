@@ -13,6 +13,7 @@ const config = {
     apiKey: process.env.API_KEY,
     hostEmail: process.env.HOST_EMAIL,
     portEmail: process.env.PORT_EMAIL,
+    baseUrlWeb: process.env.BASE_URL_WEB,
 };
 
 module.exports = { config };
