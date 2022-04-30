@@ -37,13 +37,18 @@ class UserService {
     }
 
     async findByEmail(email) {
-        return await models.User.findOne({
+        // return await models.User.findOne({
+        //     where: { email }
+        // }).then((user) => {
+        //     return user;
+        // }).catch(() => {
+        //     throw boom.unauthorized('USER_NOT_FOUND');
+        // });
+
+        const user = await models.User.findOne({
             where: { email }
-        }).then((user) => {            
-            return user;
-        }).catch(() => {
-            throw boom.unauthorized('USER_NOT_FOUND');
         });
+        return user;
     }
 
     async findByCountry(email) {
