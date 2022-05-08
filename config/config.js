@@ -9,7 +9,7 @@ const config = {
     dbName: process.env.DB_NAME,
     dbHost: process.env.DB_HOST,
     jwtSecret: process.env.JWT_SECRET,
-    corsWhiteList: process.env.CORS_WHITE_LIST,
+    corsWhiteList: process.env.CORS_WHITE_LIST.split(' '),
     apiKey: process.env.API_KEY,
     hostEmail: process.env.HOST_EMAIL,
     portEmail: process.env.PORT_EMAIL,
