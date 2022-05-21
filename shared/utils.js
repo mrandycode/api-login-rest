@@ -33,7 +33,6 @@ function getEmailRecovery(email, user, token, req) {
 
     return setBodyEmail(body);
 }
-
 function setBodyEmail(body) {
     const bodyEmail = {
         from: body.from,
