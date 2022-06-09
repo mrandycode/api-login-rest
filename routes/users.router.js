@@ -143,7 +143,6 @@ router.post('/recovery/password',
             const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '15min' });
             await service.update(user.id, { recoveryToken: token });
             const bodyEmail = utils.getEmailRecovery(email, user, token, req);
-
             const options = constants.EMAIL_RECOVERY;
             var postReq = await http.request(options, function (response) {
                 response.setEncoding('utf8');
