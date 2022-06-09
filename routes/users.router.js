@@ -1,5 +1,5 @@
 const express = require('express');
-const http = require('https');
+const http = require('http');
 const UserService = require('./../services/user.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const constants = require('../shared/constants');
