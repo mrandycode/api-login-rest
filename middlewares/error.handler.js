@@ -1,18 +1,19 @@
 const utilsShared = require('../shared/utils');
+const { TokenExpiredError } = require('jsonwebtoken');
 
-function logErrors(err, req, res, next) {
+const logErrors = (err, req, res, next) => {
   console.error(err);
   next(err);
 }
 
-function errorHandler(err, req, res, next) {
+const errorHandler = (err, req, res, next) => {
   res.status(500).json({
     message: req.t(err.message),
     stack: err.stack,
   });
 }
 
-function boomErrorHandler(err, req, res, next) {
+const boomErrorHandler = (err, req, res, next) => {
   if (err.isBoom) {
     err = utilsShared.translateBoom(err, req);
     const { output } = err;
@@ -21,7 +22,7 @@ function boomErrorHandler(err, req, res, next) {
   next(err);
 }
 
-function ormErrorHandler(err, req, res, next) { 
+const ormErrorHandler = (err, req, res, next) => {
   if (err) {
     res.status(409).json({
       statusCode: 409,
@@ -32,4 +33,19 @@ function ormErrorHandler(err, req, res, next) {
   next(err);
 }
 
-module.exports = { logErrors, errorHandler, boomErrorHandler, ormErrorHandler };
+const jsonWebtoken = (err, req, res, next) => {
+  if (err instanceof TokenExpiredError) {
+    res.status(401).json({
+      message: req.t('TOKEN_EXPIRED')
+    })
+  }
+  next(err);
+}
+
+module.exports = {
+  logErrors,
+  errorHandler,
+  boomErrorHandler,
+  ormErrorHandler,
+  jsonWebtoken
+};

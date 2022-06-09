@@ -18,7 +18,7 @@ router.post('/login',
         sub: user.id,
         role: user.role
       }
-      const token = jwt.sign(payload, config.jwtSecret,{expiresIn: '30min'} );
+      const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '30min' });
       delete user.dataValues.recoveryToken;
       res.json({ user, token });
     } catch (error) {
@@ -32,8 +32,14 @@ router.post('/change-password',
   async (req, res, next) => {
     try {
       const { recoveryToken, password } = req.body;
-      await service.changePassword(recoveryToken, password);
-      res.status(201).json({ message: req.t('CHANGE_PASSWORD_SUCCESS') });
+      
+      const response = await service.changePassword(recoveryToken, password);
+      if (!response) {
+        res.status(201).json({ message: req.t('CHANGE_PASSWORD_SUCCESS') });
+      } else {
+        res.status(401).json({ message: req.t('UNAUTHORIZED') });
+      }
+
     } catch (error) {
       next(error);
     }

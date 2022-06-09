@@ -3,7 +3,13 @@ const cors = require('cors');
 const routerApi = require('./routes');
 const passport = require('passport');
 const { config } = require('./config/config');
-const { logErrors, errorHandler, boomErrorHandler, ormErrorHandler } = require('./middlewares/error.handler');
+const {
+    logErrors,
+    errorHandler,
+    boomErrorHandler,
+    ormErrorHandler,
+    jsonWebtoken
+} = require('./middlewares/error.handler');
 const port = config.port || 3000;
 const whitelist = config.corsWhiteList;
 const i18next = require('i18next');
@@ -43,6 +49,7 @@ app.get('/', (req, res) => {
 
 routerApi(app);
 
+app.use(jsonWebtoken);
 app.use(boomErrorHandler);
 app.use(logErrors);
 app.use(ormErrorHandler);
