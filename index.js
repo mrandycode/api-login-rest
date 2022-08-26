@@ -3,6 +3,7 @@ const cors = require('cors');
 const routerApi = require('./routes');
 const passport = require('passport');
 const { config } = require('./config/config');
+const boom = require('@hapi/boom');
 const {
     logErrors,
     errorHandler,
@@ -33,7 +34,7 @@ const options = {
         if (whitelist.includes(origin) || !origin) {
             callback(null, true);
         } else {
-            callback(new Error('Host no permitido'));
+            callback(boom.unauthorized('HOST_UNAUTHORIZED'));
         }
     }
 }
@@ -45,7 +46,6 @@ require('./utils/auth');
 app.get('/', (req, res) => {
     res.send('Welcome to api-login-rest-1.0');
 });
-
 
 routerApi(app);
 

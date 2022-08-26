@@ -12,6 +12,7 @@ const sequelize = new Sequelize(URI, {
 });
 
 setupModels(sequelize);
-sequelize.sync(); // Con este método de el ORM empieza a crear o modificar los modelos en la BD.
+sequelize.Op = Sequelize.Op;
+// sequelize.sync(); // Con este método de el ORM empieza a crear o modificar los modelos en la BD.
 
 module.exports = sequelize;

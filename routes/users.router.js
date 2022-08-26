@@ -29,7 +29,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id',
     passport.authenticate('jwt', { session: false }),
     checkApiKey,
-    checkRoles('admin', 'customer'),
+    checkRoles('admin', 'customer', 'doctor'),
     validatorHandler(getUserByIdSchema, 'params'),
     async (req, res, next) => {
         try {
