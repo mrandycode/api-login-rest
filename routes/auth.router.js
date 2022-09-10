@@ -23,7 +23,7 @@ router.post('/login',
       }
       const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '30min' });
       delete user.dataValues.recoveryToken;
-      res.json(await validateIsDoctor(req, res, user, token));
+      await validateIsDoctor(req, res, user, token);
 
     } catch (error) {
       next(error);
@@ -51,37 +51,37 @@ router.post('/change-password',
 );
 
 const validateIsDoctor = async (req, res, user, token) => {
-  let doctorNew = false;
-  let doctorProfile = {};
+  let isDoctorNew = false;
+  
   if (user.role === 'doctor') {
-    const options = constants.DOCTOR_ROUTER;
+    let doctorProfile = {};
+    let options = constants.DOCTOR_ROUTER;
+    const userId = user.id;
+    const path = '/api-core-rest/doctor-profile/user-id/';
     options.headers.Authorization = `Bearer ${token}`;
-    var postReq = await http.request(options, function (response) {
-      response.setEncoding('utf8');
-      let data = '';
-      response.on('data', (chunk) => {
-        data += chunk;
-        doctorProfile = JSON.parse(data);
+    options.path = `${path}${userId}`
 
-        if (doctorProfile && doctorProfile.id) {
-          doctorNew = true;
-        }
-
+    await http.get(options, function (response) {
+      let body = '';
+      response.on('data', function (chunk) {
+        body += chunk;
       });
       response.on('end', () => {
-        res.end(data);
+        doctorProfile = JSON.parse(body);
+        if (doctorProfile && doctorProfile.id > 0) {
+          isDoctorNew = false;
+        } else {
+          isDoctorNew = true;
+        }
+        res.json({ user, token, isDoctorNew });
       });
+    }).on('error', function (e) {
+      console.warn("Got error: " + e.message);
+    }).end();
 
-    });
-    postReq.write('');
-    postReq.end();
-    doctorNew = true;
-    return { user, token, doctorNew };
   } else {
-    return { user, token, doctorNew };
+    return { user, token, isDoctorNew };
   }
-
-
 }
 
 module.exports = router;
