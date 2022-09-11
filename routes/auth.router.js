@@ -80,7 +80,7 @@ const validateIsDoctor = async (req, res, user, token) => {
     }).end();
 
   } else {
-    return { user, token, isDoctorNew };
+    res.json({ user, token, isDoctorNew });
   }
 }
 
