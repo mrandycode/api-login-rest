@@ -23,6 +23,16 @@ module.exports = Object.freeze({
             'Content-Type': 'application/json'
         }
     },
+    DOCTOR_ROUTER: {
+        host: 'localhost',
+        port: 3000,
+        path: '/api-core-rest/doctor-profile/user-id/',
+        method: 'GET',
+        headers: {
+            'api-key': config.apiKey,
+            'Content-Type': 'application/json'
+        }
+    },
     EMAILS: {
         RECOVERY: "recovery@salvameid.com",
         SUPPORT: "support@salvameid.com"
