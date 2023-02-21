@@ -1,5 +1,5 @@
 const express = require("express");
-const http = require("http");
+const http = require("https");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const { newPasswordSchema } = require("../schemas/auth.schema");
