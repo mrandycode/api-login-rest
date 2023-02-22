@@ -24,7 +24,7 @@ module.exports = Object.freeze({
     },
   },
   DOCTOR_ROUTER: {
-    host: "localhost",
+    host: config.hostDomain,
     port: 3000,
     path: "/api-core-rest/doctor-profile/user-id/",
     method: "GET",
