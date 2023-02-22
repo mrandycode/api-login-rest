@@ -59,7 +59,6 @@ const validateIsDoctor = async (req, res, user, token) => {
     const path = "/api-core-rest/doctor-profile/user-id/";
     options.headers.Authorization = `Bearer ${token}`;
     options.path = `${path}${userId}`;
-
     await http
       .get(options, function (response) {
         let body = "";

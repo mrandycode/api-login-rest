@@ -16,6 +16,7 @@ const config = {
   baseUrlWeb: process.env.BASE_URL_WEB,
   passwordDefault: process.env.PASSWORD_DEFAULT,
   hostDomain: process.env.HOST_DOMAIN,
+  portApiCore: process.env.PORT_API_CORE,
 };
 
 module.exports = { config };
